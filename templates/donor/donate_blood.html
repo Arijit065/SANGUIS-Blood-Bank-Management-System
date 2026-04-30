@@ -1,0 +1,107 @@
+{% extends 'donor/donorbase.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    
+    <!-- Page Header -->
+    <div class="mb-8">
+        <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Donate Blood</h2>
+        <p class="text-gray-500 dark:text-gray-400 mt-2">Pledge your donation to help save lives in our community.</p>
+    </div>
+
+    <!-- Form Card -->
+    <div class="glass-card rounded-3xl p-6 sm:p-10 shadow-lg relative overflow-hidden">
+        
+        <!-- Background decoration -->
+        <div class="absolute top-0 right-0 w-64 h-64 bg-pink-500/10 dark:bg-pink-500/5 rounded-bl-full pointer-events-none"></div>
+
+        <form method="POST" autocomplete="off" enctype="multipart/form-data" class="space-y-8 relative z-10">
+            {% csrf_token %}
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <!-- Blood Group -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Your Blood Group</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <i class="fas fa-tint text-brand-500"></i>
+                        </div>
+                        <select name="bloodgroup" required class="block w-full pl-11 pr-10 py-3 bg-white/50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all appearance-none cursor-pointer">
+                            <option value="" disabled selected>Select Blood Group</option>
+                            <option value="A+">A+</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option>
+                            <option value="O+">O+</option>
+                            <option value="O-">O-</option>
+                        </select>
+                        <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+                            <i class="fas fa-chevron-down text-gray-400 text-sm"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Units -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Donation Unit (in ml)</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <i class="fas fa-flask text-gray-400"></i>
+                        </div>
+                        {% render_field donation_form.unit|attr:'required:true' type="number" class="block w-full pl-11 pr-4 py-3 bg-white/50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all" placeholder="Standard is usually 450ml" %}
+                    </div>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Standard whole blood donation is ~450ml.</p>
+                </div>
+
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Age -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Current Age</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <i class="fas fa-user text-gray-400"></i>
+                        </div>
+                        {% render_field donation_form.age|attr:'required:true' type="number" class="block w-full pl-11 pr-4 py-3 bg-white/50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all" placeholder="Must be 18 or older" %}
+                    </div>
+                </div>
+
+                <!-- Disease -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Disease / Conditions (if any)</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <i class="fas fa-heartbeat text-gray-400"></i>
+                        </div>
+                        {% render_field donation_form.disease|attr:'required:true' class="block w-full pl-11 pr-4 py-3 bg-white/50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all" placeholder="Type None if healthy" %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pre-screening Checklist -->
+            <div class="p-5 bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-900/50 rounded-xl">
+                <h4 class="text-sm font-bold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+                    <i class="fas fa-clipboard-check text-blue-500"></i> Pre-Donation Checklist
+                </h4>
+                <ul class="text-sm text-gray-600 dark:text-gray-300 space-y-2">
+                    <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-0.5"></i> You feel healthy and well today.</li>
+                    <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-0.5"></i> You weigh at least 50 kg (110 lbs).</li>
+                    <li class="flex items-start gap-2"><i class="fas fa-check-circle text-green-500 mt-0.5"></i> You haven't donated blood in the last 56 days.</li>
+                </ul>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="pt-4 flex justify-end">
+                <button type="submit" class="w-full md:w-auto px-8 py-3.5 bg-brand-600 hover:bg-brand-700 text-white font-semibold rounded-xl shadow-lg shadow-brand-500/30 transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
+                    Confirm Donation <i class="fas fa-heart text-sm"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock content %}

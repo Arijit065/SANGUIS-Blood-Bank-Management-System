@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donor Dashboard | Sanguis</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#fdf2f2',
+                            100: '#fbe8e8',
+                            500: '#ef4444',
+                            600: '#dc2626',
+                            700: '#b91c1c',
+                            900: '#7f1d1d',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+        .dark .glass-card {
+            background: rgba(31, 41, 55, 0.7);
+            border: 1px solid rgba(55, 65, 81, 0.5);
+        }
+        
+        .hero-bg {
+            background-color: #f8fafc;
+            background-image: 
+                radial-gradient(at 0% 0%, hsla(353,100%,78%,0.2) 0, transparent 50%), 
+                radial-gradient(at 100% 0%, hsla(210,100%,78%,0.2) 0, transparent 50%);
+            background-attachment: fixed;
+        }
+        .dark .hero-bg {
+            background-color: #0f172a;
+            background-image: 
+                radial-gradient(at 0% 0%, hsla(353,100%,28%,0.3) 0, transparent 50%), 
+                radial-gradient(at 100% 0%, hsla(210,100%,28%,0.3) 0, transparent 50%);
+            background-attachment: fixed;
+        }
+        
+        /* Smooth transitions for everything */
+        * { transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease; }
+        
+        .sidebar-item-active {
+            background-color: #ef4444; /* brand-500 */
+            color: white !important;
+            box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.3), 0 2px 4px -1px rgba(239, 68, 68, 0.2);
+        }
+        .dark .sidebar-item-active {
+            background-color: #dc2626; /* brand-600 */
+            box-shadow: 0 4px 6px -1px rgba(220, 38, 38, 0.3), 0 2px 4px -1px rgba(220, 38, 38, 0.2);
+        }
+
+        .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="hero-bg text-gray-900 dark:text-gray-100 min-h-screen flex overflow-hidden">
+
+    <!-- Mobile sidebar overlay -->
+    <div id="sidebarOverlay" class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-40 hidden lg:hidden" onclick="toggleSidebar()"></div>
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-r border-gray-200 dark:border-gray-800 flex flex-col transition-transform duration-300 transform -translate-x-full lg:translate-x-0 h-screen">
+        <!-- Logo -->
+        <div class="h-20 flex items-center px-6 border-b border-gray-200 dark:border-gray-800 shrink-0">
+            <div class="w-8 h-8 bg-brand-600 rounded-lg flex items-center justify-center mr-3 shadow-lg shadow-brand-500/30">
+                <i class="fas fa-heartbeat text-white text-sm"></i>
+            </div>
+            <span class="text-xl font-bold tracking-tight">Sanguis <span class="text-xs text-brand-600 dark:text-brand-400 align-top">Donor</span></span>
+        </div>
+
+        <!-- Nav Links -->
+        <div class="flex-grow overflow-y-auto py-6 px-4 space-y-1">
+            <a href="/donor/donor-dashboard" class="flex items-center px-4 py-3 rounded-xl text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white transition-all group">
+                <i class="fas fa-chart-pie w-6"></i>
+                <span class="font-medium text-sm">Dashboard</span>
+            </a>
+            
+            <p class="px-4 pt-4 pb-2 text-xs font-bold text-gray-400 uppercase tracking-wider">Donations</p>
+            <a href="/donor/donate-blood" class="flex items-center px-4 py-3 rounded-xl text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white transition-all group">
+                <i class="fas fa-hand-holding-heart w-6 text-pink-500 group-hover:text-pink-600"></i>
+                <span class="font-medium text-sm">Donate Blood</span>
+            </a>
+            <a href="/donor/donation-history" class="flex items-center px-4 py-3 rounded-xl text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white transition-all group">
+                <i class="fas fa-history w-6 text-purple-500 group-hover:text-purple-600"></i>
+                <span class="font-medium text-sm">Donation History</span>
+            </a>
+
+            <p class="px-4 pt-4 pb-2 text-xs font-bold text-gray-400 uppercase tracking-wider">Requests</p>
+            <a href="/donor/make-request" class="flex items-center px-4 py-3 rounded-xl text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white transition-all group">
+                <i class="fas fa-sync-alt w-6 text-brand-500 group-hover:text-brand-600"></i>
+                <span class="font-medium text-sm">Blood Request</span>
+            </a>
+            <a href="/donor/request-history" class="flex items-center px-4 py-3 rounded-xl text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white transition-all group">
+                <i class="fas fa-list-alt w-6 text-blue-500 group-hover:text-blue-600"></i>
+                <span class="font-medium text-sm">Request History</span>
+            </a>
+        </div>
+
+        <!-- Bottom Profile/Logout -->
+        <div class="p-4 border-t border-gray-200 dark:border-gray-800 shrink-0">
+            <a href="/logout" class="flex items-center px-4 py-3 rounded-xl text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors group">
+                <i class="fas fa-sign-out-alt w-6"></i>
+                <span class="font-medium text-sm">Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col h-screen overflow-hidden relative">
+        
+        <!-- Top Navbar -->
+        <header class="h-20 bg-white/50 dark:bg-gray-900/50 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 flex items-center justify-between px-4 sm:px-6 z-30 shrink-0">
+            <div class="flex items-center">
+                <button onclick="toggleSidebar()" class="lg:hidden text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 mr-4 focus:outline-none">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+                <div class="hidden sm:block relative w-64">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                        <i class="fas fa-search"></i>
+                    </span>
+                    <input type="text" class="w-full bg-gray-100 dark:bg-gray-800 border-transparent rounded-full py-2 pl-10 pr-4 text-sm focus:border-brand-500 focus:bg-white dark:focus:bg-gray-700 focus:ring-0 transition-colors" placeholder="Search...">
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <button id="themeToggle" class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 w-10 h-10 rounded-full flex items-center justify-center transition-colors focus:outline-none">
+                    <i id="themeIcon" class="fas fa-moon"></i>
+                </button>
+                <div class="relative">
+                    <button class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 w-10 h-10 rounded-full flex items-center justify-center transition-colors focus:outline-none">
+                        <i class="fas fa-bell"></i>
+                        <span class="absolute top-2 right-2 w-2 h-2 bg-brand-500 rounded-full"></span>
+                    </button>
+                </div>
+                <div class="w-8 h-8 rounded-full bg-pink-100 dark:bg-pink-900/30 border border-pink-200 dark:border-pink-800 flex items-center justify-center text-pink-600 dark:text-pink-400 font-bold text-sm">
+                    D
+                </div>
+            </div>
+        </header>
+
+        <!-- Page Content -->
+        <main class="flex-1 overflow-x-hidden overflow-y-auto bg-transparent p-4 sm:p-6 lg:p-8 custom-scrollbar relative">
+            <div class="max-w-7xl mx-auto animate-fade-in">
+                {% block content %}
+                {% endblock content %}
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Active Link highlighting based on current URL
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentPath = window.location.pathname;
+            const sidebarLinks = document.querySelectorAll('#sidebar a');
+            
+            sidebarLinks.forEach(link => {
+                const linkPath = link.getAttribute('href');
+                if (currentPath === linkPath && linkPath !== '/logout') {
+                    link.classList.add('sidebar-item-active');
+                    link.classList.remove('text-gray-600', 'dark:text-gray-300', 'hover:bg-gray-100', 'dark:hover:bg-gray-800');
+                    const icon = link.querySelector('i');
+                    if(icon) {
+                        icon.classList.remove('text-brand-500', 'text-pink-500', 'text-blue-500', 'text-purple-500');
+                        icon.classList.add('text-white');
+                    }
+                }
+            });
+        });
+
+        // Sidebar Toggle for Mobile
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            
+            if (sidebar.classList.contains('-translate-x-full')) {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            }
+        }
+
+        // Theme Toggle Logic
+        const themeToggleBtn = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const htmlElement = document.documentElement;
+
+        // Initialize Theme
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            htmlElement.classList.add('dark');
+            themeIcon.classList.remove('fa-moon');
+            themeIcon.classList.add('fa-sun');
+        }
+
+        // Toggle Theme
+        themeToggleBtn.addEventListener('click', function() {
+            htmlElement.classList.toggle('dark');
+            if (htmlElement.classList.contains('dark')) {
+                localStorage.setItem('color-theme', 'dark');
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+            } else {
+                localStorage.setItem('color-theme', 'light');
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+            }
+        });
+    </script>
+</body>
+</html>
