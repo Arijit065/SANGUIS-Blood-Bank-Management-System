@@ -1,0 +1,141 @@
+{% extends 'patient/patientbase.html' %}
+{% block content %}
+
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+    <div>
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+            Welcome Back! <span class="text-brand-500 animate-pulse">❤️</span>
+        </h1>
+        <p class="text-gray-600 dark:text-gray-400 mt-2">Here is a quick overview of your blood request activities.</p>
+    </div>
+    <div class="mt-4 md:mt-0">
+        <a href="/patient/make-request" class="bg-brand-600 text-white px-5 py-2.5 rounded-xl shadow-lg shadow-brand-500/30 hover:shadow-brand-500/50 hover:bg-brand-700 transition-all font-semibold flex items-center gap-2 transform hover:-translate-y-0.5">
+            <i class="fas fa-plus-circle"></i> New Blood Request
+        </a>
+    </div>
+</div>
+
+<!-- Stats Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+    <!-- Card 1 -->
+    <div class="glass-card rounded-2xl p-6 relative overflow-hidden group hover:-translate-y-1 transition-all duration-300">
+        <div class="absolute -right-6 -top-6 w-24 h-24 bg-blue-100 dark:bg-blue-900/30 rounded-full group-hover:scale-110 transition-transform duration-500"></div>
+        <div class="flex items-center justify-between relative z-10">
+            <div>
+                <p class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Total Requests</p>
+                <h3 class="text-3xl font-bold text-gray-900 dark:text-white">{{requestmade}}</h3>
+            </div>
+            <div class="w-14 h-14 bg-blue-50 dark:bg-blue-900/50 rounded-2xl flex items-center justify-center text-blue-600 dark:text-blue-400 text-2xl shadow-sm">
+                <i class="fas fa-sync-alt"></i>
+            </div>
+        </div>
+        <div class="mt-4 flex items-center text-sm text-gray-500 dark:text-gray-400 relative z-10">
+            <span>Lifetime requests made</span>
+        </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="glass-card rounded-2xl p-6 relative overflow-hidden group hover:-translate-y-1 transition-all duration-300">
+        <div class="absolute -right-6 -top-6 w-24 h-24 bg-yellow-100 dark:bg-yellow-900/30 rounded-full group-hover:scale-110 transition-transform duration-500"></div>
+        <div class="flex items-center justify-between relative z-10">
+            <div>
+                <p class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Pending</p>
+                <h3 class="text-3xl font-bold text-gray-900 dark:text-white">{{requestpending}}</h3>
+            </div>
+            <div class="w-14 h-14 bg-yellow-50 dark:bg-yellow-900/50 rounded-2xl flex items-center justify-center text-yellow-600 dark:text-yellow-400 text-2xl shadow-sm">
+                <i class="fas fa-clock"></i>
+            </div>
+        </div>
+        <div class="mt-4 flex items-center text-sm text-yellow-600 dark:text-yellow-400 font-medium relative z-10">
+            <i class="fas fa-circle-notch fa-spin mr-1.5"></i> Awaiting approval
+        </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="glass-card rounded-2xl p-6 relative overflow-hidden group hover:-translate-y-1 transition-all duration-300">
+        <div class="absolute -right-6 -top-6 w-24 h-24 bg-green-100 dark:bg-green-900/30 rounded-full group-hover:scale-110 transition-transform duration-500"></div>
+        <div class="flex items-center justify-between relative z-10">
+            <div>
+                <p class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Approved</p>
+                <h3 class="text-3xl font-bold text-gray-900 dark:text-white">{{requestapproved}}</h3>
+            </div>
+            <div class="w-14 h-14 bg-green-50 dark:bg-green-900/50 rounded-2xl flex items-center justify-center text-green-600 dark:text-green-400 text-2xl shadow-sm">
+                <i class="fas fa-check-circle"></i>
+            </div>
+        </div>
+        <div class="mt-4 flex items-center text-sm text-green-600 dark:text-green-400 font-medium relative z-10">
+            <i class="fas fa-arrow-up mr-1.5"></i> Successfully processed
+        </div>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="glass-card rounded-2xl p-6 relative overflow-hidden group hover:-translate-y-1 transition-all duration-300">
+        <div class="absolute -right-6 -top-6 w-24 h-24 bg-red-100 dark:bg-red-900/30 rounded-full group-hover:scale-110 transition-transform duration-500"></div>
+        <div class="flex items-center justify-between relative z-10">
+            <div>
+                <p class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Rejected</p>
+                <h3 class="text-3xl font-bold text-gray-900 dark:text-white">{{requestrejected}}</h3>
+            </div>
+            <div class="w-14 h-14 bg-red-50 dark:bg-red-900/50 rounded-2xl flex items-center justify-center text-red-600 dark:text-red-400 text-2xl shadow-sm">
+                <i class="fas fa-times-circle"></i>
+            </div>
+        </div>
+        <div class="mt-4 flex items-center text-sm text-red-500 font-medium relative z-10">
+            <i class="fas fa-exclamation-circle mr-1.5"></i> Action needed
+        </div>
+    </div>
+</div>
+
+<!-- Secondary Section (Chart placeholder & Activity) -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Activity Timeline -->
+    <div class="glass-card rounded-2xl p-6 lg:col-span-2">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white">Request Overview</h3>
+            <button class="text-gray-500 hover:text-brand-500"><i class="fas fa-ellipsis-v"></i></button>
+        </div>
+        <div class="h-64 flex items-center justify-center bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-100 dark:border-gray-700">
+            <div class="text-center">
+                <i class="fas fa-chart-line text-4xl text-gray-300 dark:text-gray-600 mb-3"></i>
+                <p class="text-gray-500 dark:text-gray-400 text-sm">Visual analytics will appear here as you make requests.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Tips -->
+    <div class="glass-card rounded-2xl p-6">
+        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-6">Patient Guide</h3>
+        <ul class="space-y-4">
+            <li class="flex gap-4">
+                <div class="w-10 h-10 rounded-full bg-brand-50 dark:bg-brand-900/30 flex items-center justify-center text-brand-600 dark:text-brand-400 shrink-0">
+                    1
+                </div>
+                <div>
+                    <h4 class="font-semibold text-gray-900 dark:text-white text-sm">Submit Request</h4>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Fill out the blood request form accurately.</p>
+                </div>
+            </li>
+            <li class="flex gap-4">
+                <div class="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0">
+                    2
+                </div>
+                <div>
+                    <h4 class="font-semibold text-gray-900 dark:text-white text-sm">Wait for Approval</h4>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Admins will review and assign available donors.</p>
+                </div>
+            </li>
+            <li class="flex gap-4">
+                <div class="w-10 h-10 rounded-full bg-green-50 dark:bg-green-900/30 flex items-center justify-center text-green-600 dark:text-green-400 shrink-0">
+                    3
+                </div>
+                <div>
+                    <h4 class="font-semibold text-gray-900 dark:text-white text-sm">Receive Blood</h4>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Once approved, the blood units will be reserved.</p>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+
+{% endblock content %}
