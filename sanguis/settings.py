@@ -55,7 +55,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 CSRF_COOKIE_SECURE=False
-ROOT_URLCONF = 'bloodbankmanagement.urls'
+ROOT_URLCONF = 'sanguis.urls'
 
 TEMPLATES = [
     {
@@ -73,7 +73,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'bloodbankmanagement.wsgi.application'
+WSGI_APPLICATION = 'sanguis.wsgi.application'
 
 
 # Database
