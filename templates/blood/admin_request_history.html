@@ -1,0 +1,276 @@
+{% extends 'blood/adminbase.html' %}
+{% block content %}
+<div class="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div>
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Blood Request History</h2>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">View the history of all processed blood requests</p>
+    </div>
+    <div class="flex items-center gap-3">
+        <button onclick="exportTableToCSV('request_history.csv')" class="flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700 transition-colors">
+            <i class="fas fa-file-csv mr-2 text-green-600"></i> Export CSV
+        </button>
+    </div>
+</div>
+
+{% if message %}
+<div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+    <span class="font-medium">Notice:</span> {{message}}
+</div>
+{% endif %}
+
+<!-- Table Card -->
+<div class="glass-card rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden relative">
+    
+    <!-- Toolbar -->
+    <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-gray-50/50 dark:bg-gray-800/50">
+        <!-- Search -->
+        <div class="relative w-full md:w-96">
+            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <i class="fas fa-search text-gray-400"></i>
+            </div>
+            <input type="text" id="tableSearch" onkeyup="filterTable()" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-500 focus:border-brand-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-brand-500 dark:focus:border-brand-500 transition-colors" placeholder="Search by patient name, reason...">
+        </div>
+        <!-- Filter Dropdown -->
+        <div class="flex gap-2">
+            <select id="bloodGroupFilter" onchange="filterTable()" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-500 focus:border-brand-500 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white transition-colors">
+                <option value="">All Blood Groups</option>
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>
+            </select>
+            <select id="statusFilter" onchange="filterTable()" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-500 focus:border-brand-500 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white transition-colors">
+                <option value="">All Statuses</option>
+                <option value="approved">Approved</option>
+                <option value="rejected">Rejected</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Table Wrapper -->
+    <div class="overflow-x-auto">
+        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400" id="dataTable">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700/50 dark:text-gray-300">
+                <tr>
+                    <th scope="col" class="px-6 py-4 cursor-pointer hover:text-brand-600 transition" onclick="sortTable(0)">Patient <i class="fas fa-sort ml-1"></i></th>
+                    <th scope="col" class="px-6 py-4 cursor-pointer hover:text-brand-600 transition" onclick="sortTable(1)">Blood Type <i class="fas fa-sort ml-1"></i></th>
+                    <th scope="col" class="px-6 py-4 cursor-pointer hover:text-brand-600 transition" onclick="sortTable(2)">Units <i class="fas fa-sort ml-1"></i></th>
+                    <th scope="col" class="px-6 py-4 cursor-pointer hover:text-brand-600 transition" onclick="sortTable(3)">Date <i class="fas fa-sort ml-1"></i></th>
+                    <th scope="col" class="px-6 py-4">Status</th>
+                    <th scope="col" class="px-6 py-4 text-right">Stock Impact</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                {% if requests %}
+                    {% for t in requests %}
+                    <tr class="bg-white border-b dark:bg-gray-800/80 dark:border-gray-700 hover:bg-brand-50 dark:hover:bg-gray-700/80 transition-colors">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm font-semibold text-gray-900 dark:text-white">{{t.patient_name}}</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-400">Age: {{t.patient_age}} | {{t.reason}}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2.5 py-1 text-xs font-bold rounded-full 
+                                {% if 'A' in t.bloodgroup %}bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300
+                                {% elif 'B' in t.bloodgroup %}bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300
+                                {% else %}bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300{% endif %}">
+                                {{t.bloodgroup}} <i class="fas fa-tint ml-1"></i>
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm font-bold text-gray-900 dark:text-white">{{t.unit}} ml</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900 dark:text-gray-300"><i class="far fa-calendar-alt text-gray-400 mr-1.5"></i> {{t.date|date:"M d, Y"}}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            {% if t.status == 'Approved' %}
+                                <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-1 rounded-full dark:bg-green-900/30 dark:text-green-300 border border-green-200 dark:border-green-800">
+                                    <i class="fas fa-check-circle mr-1"></i> Approved
+                                </span>
+                            {% else %}
+                                <span class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-1 rounded-full dark:bg-red-900/30 dark:text-red-300 border border-red-200 dark:border-red-800">
+                                    <i class="fas fa-times-circle mr-1"></i> Rejected
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            {% if t.status == 'Approved' %}
+                                <span class="text-xs text-yellow-600 dark:text-yellow-400 font-medium">
+                                    -{{t.unit}} Units from Stock
+                                </span>
+                            {% else %}
+                                <span class="text-xs text-gray-500 dark:text-gray-400 font-medium">
+                                    0 Units Deducted
+                                </span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="6" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
+                            <div class="flex flex-col items-center justify-center">
+                                <i class="fas fa-history text-4xl mb-3 text-gray-300 dark:text-gray-600"></i>
+                                <p class="text-lg font-medium">No history found</p>
+                                <p class="text-sm mt-1">There are no processed blood requests in the system.</p>
+                            </div>
+                        </td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- Pagination Footer -->
+    <div class="p-4 border-t border-gray-200 dark:border-gray-700 flex flex-col md:flex-row items-center justify-between gap-4 bg-gray-50/50 dark:bg-gray-800/50">
+        <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
+            Showing <span class="font-semibold text-gray-900 dark:text-white" id="pageInfo">1-10 of ?</span>
+        </span>
+        <div class="flex items-center gap-2">
+            <button onclick="prevPage()" class="px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700 transition">Previous</button>
+            <button onclick="nextPage()" class="px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700 transition">Next</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// Simple JS for Table functionalities
+let currentPage = 1;
+const rowsPerPage = 10;
+let filteredRows = [];
+
+document.addEventListener("DOMContentLoaded", function() {
+    const tableBody = document.getElementById("tableBody");
+    const rows = Array.from(tableBody.getElementsByTagName("tr"));
+    filteredRows = rows;
+    updatePagination();
+});
+
+function filterTable() {
+    const searchInput = document.getElementById("tableSearch").value.toLowerCase();
+    const bgFilter = document.getElementById("bloodGroupFilter").value.toLowerCase();
+    const statusFilter = document.getElementById("statusFilter").value.toLowerCase();
+    const tableBody = document.getElementById("tableBody");
+    const rows = Array.from(tableBody.getElementsByTagName("tr"));
+    
+    filteredRows = rows.filter(row => {
+        if (row.children.length === 1 && row.textContent.includes('No history found')) return true;
+        const textContent = row.textContent.toLowerCase();
+        let bloodGroupText = "";
+        let statusText = "";
+        if(row.children.length > 4) {
+            bloodGroupText = row.children[1].textContent.toLowerCase();
+            statusText = row.children[4].textContent.toLowerCase();
+        }
+        
+        const matchesSearch = textContent.includes(searchInput);
+        const matchesBg = bgFilter === "" || bloodGroupText.includes(bgFilter);
+        const matchesStatus = statusFilter === "" || statusText.includes(statusFilter);
+        
+        return matchesSearch && matchesBg && matchesStatus;
+    });
+
+    rows.forEach(row => row.style.display = "none");
+    filteredRows.forEach(row => row.style.display = "");
+    
+    currentPage = 1;
+    updatePagination();
+}
+
+function updatePagination() {
+    const totalRows = filteredRows.length;
+    const startIndex = (currentPage - 1) * rowsPerPage;
+    const endIndex = Math.min(startIndex + rowsPerPage, totalRows);
+    
+    filteredRows.forEach(row => row.style.display = "none");
+    
+    for (let i = startIndex; i < endIndex; i++) {
+        if(filteredRows[i]) filteredRows[i].style.display = "";
+    }
+    
+    const infoSpan = document.getElementById("pageInfo");
+    if (totalRows === 0 || (totalRows === 1 && filteredRows[0].textContent.includes('No history found'))) {
+        infoSpan.textContent = "0 entries";
+    } else {
+        infoSpan.textContent = `${startIndex + 1}-${endIndex} of ${totalRows}`;
+    }
+}
+
+function nextPage() {
+    if ((currentPage * rowsPerPage) < filteredRows.length) {
+        currentPage++;
+        updatePagination();
+    }
+}
+
+function prevPage() {
+    if (currentPage > 1) {
+        currentPage--;
+        updatePagination();
+    }
+}
+
+function sortTable(n) {
+    let table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+    table = document.getElementById("dataTable");
+    switching = true;
+    dir = "asc"; 
+    while (switching) {
+        switching = false;
+        rows = table.rows;
+        for (i = 1; i < (rows.length - 1); i++) {
+            if(rows[i].children.length === 1) break; // Skip empty state
+            shouldSwitch = false;
+            x = rows[i].getElementsByTagName("TD")[n];
+            y = rows[i + 1].getElementsByTagName("TD")[n];
+            if (dir == "asc") {
+                if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                    shouldSwitch = true;
+                    break;
+                }
+            } else if (dir == "desc") {
+                if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                    shouldSwitch = true;
+                    break;
+                }
+            }
+        }
+        if (shouldSwitch) {
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+            switching = true;
+            switchcount ++;
+        } else {
+            if (switchcount == 0 && dir == "asc") {
+                dir = "desc";
+                switching = true;
+            }
+        }
+    }
+    filterTable(); // Reapply pagination
+}
+
+function exportTableToCSV(filename) {
+    var csv = [];
+    var rows = document.querySelectorAll("table tr");
+    for (var i = 0; i < rows.length; i++) {
+        var row = [], cols = rows[i].querySelectorAll("td, th");
+        if(cols.length === 1) continue; // Skip empty state
+        for (var j = 0; j < cols.length; j++) {
+            row.push('"' + cols[j].innerText.replace(/"/g, '""').trim() + '"');
+        }
+        csv.push(row.join(","));
+    }
+    var csvFile = new Blob([csv.join("\n")], {type: "text/csv"});
+    var downloadLink = document.createElement("a");
+    downloadLink.download = filename;
+    downloadLink.href = window.URL.createObjectURL(csvFile);
+    downloadLink.style.display = "none";
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+}
+</script>
+{% endblock content %}

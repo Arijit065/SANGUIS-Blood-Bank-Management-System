@@ -1,0 +1,348 @@
+{% extends 'blood/adminbase.html' %}
+{% block content %}
+
+<!-- Welcome Banner -->
+<div class="glass-card rounded-2xl p-6 mb-8 flex flex-col md:flex-row justify-between items-center shadow-sm">
+    <div>
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-1">Welcome back, Admin! 👋</h1>
+        <p class="text-gray-600 dark:text-gray-300 text-sm">Here is what's happening with your blood stock today.</p>
+    </div>
+    <div class="mt-4 md:mt-0 flex gap-3">
+        <a href="/admin-donor"
+            class="bg-white dark:bg-gray-800 text-gray-700 dark:text-white px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition font-medium text-sm">
+            <i class="fas fa-plus mr-2 text-brand-600"></i> New Donor
+        </a>
+        <a href="/admin-request"
+            class="bg-brand-600 text-white px-4 py-2 rounded-lg shadow-sm hover:bg-brand-700 transition font-medium text-sm">
+            Review Requests
+        </a>
+    </div>
+</div>
+
+<!-- Key Metrics Cards -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <!-- Card 1 -->
+    <div
+        class="glass-card rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300 relative overflow-hidden group">
+        <div
+            class="absolute -right-6 -top-6 w-24 h-24 bg-blue-100 dark:bg-blue-900/30 rounded-full group-hover:scale-110 transition-transform duration-500">
+        </div>
+        <div class="flex items-center justify-between relative z-10">
+            <div>
+                <p class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Total Donors</p>
+                <h3 class="text-3xl font-bold text-gray-900 dark:text-white">{{totaldonors}}</h3>
+            </div>
+            <div
+                class="w-12 h-12 bg-blue-50 dark:bg-blue-900/50 rounded-xl flex items-center justify-center text-blue-600 dark:text-blue-400 text-xl shadow-sm">
+                <i class="fas fa-users"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div
+        class="glass-card rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300 relative overflow-hidden group">
+        <div
+            class="absolute -right-6 -top-6 w-24 h-24 bg-yellow-100 dark:bg-yellow-900/30 rounded-full group-hover:scale-110 transition-transform duration-500">
+        </div>
+        <div class="flex items-center justify-between relative z-10">
+            <div>
+                <p class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Pending Requests</p>
+                <h3 class="text-3xl font-bold text-gray-900 dark:text-white">{{totalrequest}}</h3>
+            </div>
+            <div
+                class="w-12 h-12 bg-yellow-50 dark:bg-yellow-900/50 rounded-xl flex items-center justify-center text-yellow-600 dark:text-yellow-400 text-xl shadow-sm">
+                <i class="fas fa-spinner"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div
+        class="glass-card rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300 relative overflow-hidden group">
+        <div
+            class="absolute -right-6 -top-6 w-24 h-24 bg-green-100 dark:bg-green-900/30 rounded-full group-hover:scale-110 transition-transform duration-500">
+        </div>
+        <div class="flex items-center justify-between relative z-10">
+            <div>
+                <p class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Approved Requests</p>
+                <h3 class="text-3xl font-bold text-gray-900 dark:text-white">{{totalapprovedrequest}}</h3>
+            </div>
+            <div
+                class="w-12 h-12 bg-green-50 dark:bg-green-900/50 rounded-xl flex items-center justify-center text-green-600 dark:text-green-400 text-xl shadow-sm">
+                <i class="fas fa-check-circle"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Card 4 -->
+    <div
+        class="glass-card rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300 relative overflow-hidden group">
+        <div
+            class="absolute -right-6 -top-6 w-24 h-24 bg-red-100 dark:bg-red-900/30 rounded-full group-hover:scale-110 transition-transform duration-500">
+        </div>
+        <div class="flex items-center justify-between relative z-10">
+            <div>
+                <p class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Total Blood Unit (ml)</p>
+                <h3 class="text-3xl font-bold text-gray-900 dark:text-white">{{totalbloodunit}}</h3>
+            </div>
+            <div
+                class="w-12 h-12 bg-red-50 dark:bg-red-900/50 rounded-xl flex items-center justify-center text-red-600 dark:text-red-400 text-xl shadow-sm">
+                <i class="fas fa-tint"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts Section -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+    <!-- Pie Chart -->
+    <div class="glass-card rounded-2xl p-6 shadow-sm">
+        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Stock Distribution</h3>
+        <div class="relative h-64 w-full">
+            <canvas id="bloodStockChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Bar Chart -->
+    <div class="glass-card rounded-2xl p-6 shadow-sm">
+        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Availability Overview</h3>
+        <div class="relative h-64 w-full">
+            <canvas id="bloodGroupChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Trend Line Chart -->
+    <div class="glass-card rounded-2xl p-6 shadow-sm">
+        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Donation Growth Trends</h3>
+        <div class="relative h-64 w-full">
+            <canvas id="donationTrendChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Blood Stock Overview (The Blood Cards) -->
+<h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 mt-8">Current Blood Inventory</h3>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+    <!-- A+ -->
+    <div
+        class="glass-card rounded-xl p-4 flex flex-col items-center justify-center border-l-4 border-brand-500 hover:bg-white dark:hover:bg-gray-800 transition">
+        <div class="flex items-center gap-2 mb-2">
+            <span class="text-xl font-bold text-gray-800 dark:text-white">A+</span>
+            <i class="fas fa-tint text-brand-500"></i>
+        </div>
+        <span class="text-2xl font-black text-gray-900 dark:text-gray-100">{{A1.unit}} <span
+                class="text-xs text-gray-500 font-normal">Units</span></span>
+    </div>
+    <!-- A- -->
+    <div
+        class="glass-card rounded-xl p-4 flex flex-col items-center justify-center border-l-4 border-brand-400 hover:bg-white dark:hover:bg-gray-800 transition">
+        <div class="flex items-center gap-2 mb-2">
+            <span class="text-xl font-bold text-gray-800 dark:text-white">A-</span>
+            <i class="fas fa-tint text-brand-400"></i>
+        </div>
+        <span class="text-2xl font-black text-gray-900 dark:text-gray-100">{{A2.unit}} <span
+                class="text-xs text-gray-500 font-normal">Units</span></span>
+    </div>
+    <!-- B+ -->
+    <div
+        class="glass-card rounded-xl p-4 flex flex-col items-center justify-center border-l-4 border-blue-500 hover:bg-white dark:hover:bg-gray-800 transition">
+        <div class="flex items-center gap-2 mb-2">
+            <span class="text-xl font-bold text-gray-800 dark:text-white">B+</span>
+            <i class="fas fa-tint text-blue-500"></i>
+        </div>
+        <span class="text-2xl font-black text-gray-900 dark:text-gray-100">{{B1.unit}} <span
+                class="text-xs text-gray-500 font-normal">Units</span></span>
+    </div>
+    <!-- B- -->
+    <div
+        class="glass-card rounded-xl p-4 flex flex-col items-center justify-center border-l-4 border-blue-400 hover:bg-white dark:hover:bg-gray-800 transition">
+        <div class="flex items-center gap-2 mb-2">
+            <span class="text-xl font-bold text-gray-800 dark:text-white">B-</span>
+            <i class="fas fa-tint text-blue-400"></i>
+        </div>
+        <span class="text-2xl font-black text-gray-900 dark:text-gray-100">{{B2.unit}} <span
+                class="text-xs text-gray-500 font-normal">Units</span></span>
+    </div>
+    <!-- AB+ -->
+    <div
+        class="glass-card rounded-xl p-4 flex flex-col items-center justify-center border-l-4 border-purple-500 hover:bg-white dark:hover:bg-gray-800 transition">
+        <div class="flex items-center gap-2 mb-2">
+            <span class="text-xl font-bold text-gray-800 dark:text-white">AB+</span>
+            <i class="fas fa-tint text-purple-500"></i>
+        </div>
+        <span class="text-2xl font-black text-gray-900 dark:text-gray-100">{{AB1.unit}} <span
+                class="text-xs text-gray-500 font-normal">Units</span></span>
+    </div>
+    <!-- AB- -->
+    <div
+        class="glass-card rounded-xl p-4 flex flex-col items-center justify-center border-l-4 border-purple-400 hover:bg-white dark:hover:bg-gray-800 transition">
+        <div class="flex items-center gap-2 mb-2">
+            <span class="text-xl font-bold text-gray-800 dark:text-white">AB-</span>
+            <i class="fas fa-tint text-purple-400"></i>
+        </div>
+        <span class="text-2xl font-black text-gray-900 dark:text-gray-100">{{AB2.unit}} <span
+                class="text-xs text-gray-500 font-normal">Units</span></span>
+    </div>
+    <!-- O+ -->
+    <div
+        class="glass-card rounded-xl p-4 flex flex-col items-center justify-center border-l-4 border-yellow-500 hover:bg-white dark:hover:bg-gray-800 transition">
+        <div class="flex items-center gap-2 mb-2">
+            <span class="text-xl font-bold text-gray-800 dark:text-white">O+</span>
+            <i class="fas fa-tint text-yellow-500"></i>
+        </div>
+        <span class="text-2xl font-black text-gray-900 dark:text-gray-100">{{O1.unit}} <span
+                class="text-xs text-gray-500 font-normal">Units</span></span>
+    </div>
+    <!-- O- -->
+    <div
+        class="glass-card rounded-xl p-4 flex flex-col items-center justify-center border-l-4 border-yellow-400 hover:bg-white dark:hover:bg-gray-800 transition">
+        <div class="flex items-center gap-2 mb-2">
+            <span class="text-xl font-bold text-gray-800 dark:text-white">O-</span>
+            <i class="fas fa-tint text-yellow-400"></i>
+        </div>
+        <span class="text-2xl font-black text-gray-900 dark:text-gray-100">{{O2.unit}} <span
+                class="text-xs text-gray-500 font-normal">Units</span></span>
+    </div>
+</div>
+
+<!-- Chart.js Initialization -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Check if dark mode is active to adjust chart colors
+        const isDark = document.documentElement.classList.contains('dark');
+        const textColor = isDark ? '#e5e7eb' : '#374151';
+        const gridColor = isDark ? '#374151' : '#e5e7eb';
+
+        // Data from Django
+        const labels = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
+        const data = [
+            Number('{{A1.unit|default:0}}'),
+            Number('{{A2.unit|default:0}}'),
+            Number('{{B1.unit|default:0}}'),
+            Number('{{B2.unit|default:0}}'),
+            Number('{{AB1.unit|default:0}}'),
+            Number('{{AB2.unit|default:0}}'),
+            Number('{{O1.unit|default:0}}'),
+            Number('{{O2.unit|default:0}}')
+        ];
+        const bgColors = [
+            'rgba(239, 68, 68, 0.8)',   // Red
+            'rgba(248, 113, 113, 0.8)', // Light Red
+            'rgba(59, 130, 246, 0.8)',  // Blue
+            'rgba(96, 165, 250, 0.8)',  // Light Blue
+            'rgba(168, 85, 247, 0.8)',  // Purple
+            'rgba(192, 132, 252, 0.8)', // Light Purple
+            'rgba(234, 179, 8, 0.8)',   // Yellow
+            'rgba(250, 204, 21, 0.8)'   // Light Yellow
+        ];
+
+        // Pie Chart
+        const ctxPie = document.getElementById('bloodStockChart').getContext('2d');
+        new Chart(ctxPie, {
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data,
+                    backgroundColor: bgColors,
+                    borderWidth: isDark ? 0 : 2,
+                    borderColor: '#ffffff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'right', labels: { color: textColor } }
+                },
+                cutout: '65%'
+            }
+        });
+
+        // Bar Chart
+        const ctxBar = document.getElementById('bloodGroupChart').getContext('2d');
+        new Chart(ctxBar, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Blood Units',
+                    data: data,
+                    backgroundColor: 'rgba(239, 68, 68, 0.7)',
+                    borderColor: 'rgba(220, 38, 38, 1)',
+                    borderWidth: 1,
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: gridColor },
+                        ticks: { color: textColor }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: textColor }
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+
+        // Trend Line Chart (Donation Growth)
+        const trendDates = JSON.parse('{{ donation_dates|safe|default:"[]" }}');
+        const trendCounts = JSON.parse('{{ donation_counts|safe|default:"[]" }}');
+        
+        const ctxLine = document.getElementById('donationTrendChart').getContext('2d');
+        new Chart(ctxLine, {
+            type: 'line',
+            data: {
+                labels: trendDates.length ? trendDates : ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'], // Fallback labels
+                datasets: [{
+                    label: 'Approved Donations',
+                    data: trendCounts.length ? trendCounts : [0, 0, 0, 0, 0], // Fallback data
+                    borderColor: 'rgba(236, 72, 153, 1)', // Pink 500
+                    backgroundColor: 'rgba(236, 72, 153, 0.1)',
+                    borderWidth: 3,
+                    tension: 0.4,
+                    fill: true,
+                    pointBackgroundColor: 'rgba(236, 72, 153, 1)',
+                    pointBorderColor: '#fff',
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: gridColor },
+                        ticks: { color: textColor, stepSize: 1 }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: textColor }
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+
+        // Listen for dark mode toggle to update charts
+        document.getElementById('themeToggle').addEventListener('click', function () {
+            setTimeout(() => location.reload(), 300); // Reload to re-render charts with correct colors
+        });
+    });
+</script>
+
+{% endblock content %}

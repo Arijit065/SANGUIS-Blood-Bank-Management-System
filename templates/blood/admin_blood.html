@@ -1,0 +1,193 @@
+{% extends 'blood/adminbase.html' %}
+{% load widget_tweaks %}
+{% block content %}
+<div class="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div>
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Blood Stock Management</h2>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">View and manually update current blood inventory</p>
+    </div>
+</div>
+
+<!-- Quick Blood Stock Overview -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+    <!-- A+ -->
+    <div class="glass-card rounded-2xl p-5 flex flex-col justify-between border-t-4 border-red-500 hover:-translate-y-1 transition-transform duration-300 shadow-sm relative overflow-hidden group">
+        <div class="absolute -right-4 -bottom-4 opacity-10 group-hover:opacity-20 transition-opacity">
+            <i class="fas fa-tint text-6xl text-red-500"></i>
+        </div>
+        <div class="flex items-center justify-between mb-4 z-10">
+            <span class="text-xl font-bold text-gray-800 dark:text-white">A+</span>
+            <div class="w-8 h-8 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-500">
+                <i class="fas fa-tint"></i>
+            </div>
+        </div>
+        <div class="z-10">
+            <span class="text-3xl font-black text-gray-900 dark:text-white">{{A1.unit}}</span>
+            <span class="text-sm text-gray-500 dark:text-gray-400 ml-1">Units (ml)</span>
+        </div>
+    </div>
+    
+    <!-- B+ -->
+    <div class="glass-card rounded-2xl p-5 flex flex-col justify-between border-t-4 border-blue-500 hover:-translate-y-1 transition-transform duration-300 shadow-sm relative overflow-hidden group">
+        <div class="absolute -right-4 -bottom-4 opacity-10 group-hover:opacity-20 transition-opacity">
+            <i class="fas fa-tint text-6xl text-blue-500"></i>
+        </div>
+        <div class="flex items-center justify-between mb-4 z-10">
+            <span class="text-xl font-bold text-gray-800 dark:text-white">B+</span>
+            <div class="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-500">
+                <i class="fas fa-tint"></i>
+            </div>
+        </div>
+        <div class="z-10">
+            <span class="text-3xl font-black text-gray-900 dark:text-white">{{B1.unit}}</span>
+            <span class="text-sm text-gray-500 dark:text-gray-400 ml-1">Units (ml)</span>
+        </div>
+    </div>
+    
+    <!-- O+ -->
+    <div class="glass-card rounded-2xl p-5 flex flex-col justify-between border-t-4 border-yellow-500 hover:-translate-y-1 transition-transform duration-300 shadow-sm relative overflow-hidden group">
+        <div class="absolute -right-4 -bottom-4 opacity-10 group-hover:opacity-20 transition-opacity">
+            <i class="fas fa-tint text-6xl text-yellow-500"></i>
+        </div>
+        <div class="flex items-center justify-between mb-4 z-10">
+            <span class="text-xl font-bold text-gray-800 dark:text-white">O+</span>
+            <div class="w-8 h-8 rounded-full bg-yellow-100 dark:bg-yellow-900/30 flex items-center justify-center text-yellow-500">
+                <i class="fas fa-tint"></i>
+            </div>
+        </div>
+        <div class="z-10">
+            <span class="text-3xl font-black text-gray-900 dark:text-white">{{O1.unit}}</span>
+            <span class="text-sm text-gray-500 dark:text-gray-400 ml-1">Units (ml)</span>
+        </div>
+    </div>
+    
+    <!-- AB+ -->
+    <div class="glass-card rounded-2xl p-5 flex flex-col justify-between border-t-4 border-purple-500 hover:-translate-y-1 transition-transform duration-300 shadow-sm relative overflow-hidden group">
+        <div class="absolute -right-4 -bottom-4 opacity-10 group-hover:opacity-20 transition-opacity">
+            <i class="fas fa-tint text-6xl text-purple-500"></i>
+        </div>
+        <div class="flex items-center justify-between mb-4 z-10">
+            <span class="text-xl font-bold text-gray-800 dark:text-white">AB+</span>
+            <div class="w-8 h-8 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-500">
+                <i class="fas fa-tint"></i>
+            </div>
+        </div>
+        <div class="z-10">
+            <span class="text-3xl font-black text-gray-900 dark:text-white">{{AB1.unit}}</span>
+            <span class="text-sm text-gray-500 dark:text-gray-400 ml-1">Units (ml)</span>
+        </div>
+    </div>
+    
+    <!-- A- -->
+    <div class="glass-card rounded-2xl p-5 flex flex-col justify-between border-t-4 border-red-400 hover:-translate-y-1 transition-transform duration-300 shadow-sm relative overflow-hidden group">
+        <div class="absolute -right-4 -bottom-4 opacity-10 group-hover:opacity-20 transition-opacity">
+            <i class="fas fa-tint text-6xl text-red-400"></i>
+        </div>
+        <div class="flex items-center justify-between mb-4 z-10">
+            <span class="text-xl font-bold text-gray-800 dark:text-white">A-</span>
+            <div class="w-8 h-8 rounded-full bg-red-50 dark:bg-red-900/20 flex items-center justify-center text-red-400">
+                <i class="fas fa-tint"></i>
+            </div>
+        </div>
+        <div class="z-10">
+            <span class="text-3xl font-black text-gray-900 dark:text-white">{{A2.unit}}</span>
+            <span class="text-sm text-gray-500 dark:text-gray-400 ml-1">Units (ml)</span>
+        </div>
+    </div>
+    
+    <!-- B- -->
+    <div class="glass-card rounded-2xl p-5 flex flex-col justify-between border-t-4 border-blue-400 hover:-translate-y-1 transition-transform duration-300 shadow-sm relative overflow-hidden group">
+        <div class="absolute -right-4 -bottom-4 opacity-10 group-hover:opacity-20 transition-opacity">
+            <i class="fas fa-tint text-6xl text-blue-400"></i>
+        </div>
+        <div class="flex items-center justify-between mb-4 z-10">
+            <span class="text-xl font-bold text-gray-800 dark:text-white">B-</span>
+            <div class="w-8 h-8 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-blue-400">
+                <i class="fas fa-tint"></i>
+            </div>
+        </div>
+        <div class="z-10">
+            <span class="text-3xl font-black text-gray-900 dark:text-white">{{B2.unit}}</span>
+            <span class="text-sm text-gray-500 dark:text-gray-400 ml-1">Units (ml)</span>
+        </div>
+    </div>
+    
+    <!-- O- -->
+    <div class="glass-card rounded-2xl p-5 flex flex-col justify-between border-t-4 border-yellow-400 hover:-translate-y-1 transition-transform duration-300 shadow-sm relative overflow-hidden group">
+        <div class="absolute -right-4 -bottom-4 opacity-10 group-hover:opacity-20 transition-opacity">
+            <i class="fas fa-tint text-6xl text-yellow-400"></i>
+        </div>
+        <div class="flex items-center justify-between mb-4 z-10">
+            <span class="text-xl font-bold text-gray-800 dark:text-white">O-</span>
+            <div class="w-8 h-8 rounded-full bg-yellow-50 dark:bg-yellow-900/20 flex items-center justify-center text-yellow-400">
+                <i class="fas fa-tint"></i>
+            </div>
+        </div>
+        <div class="z-10">
+            <span class="text-3xl font-black text-gray-900 dark:text-white">{{O2.unit}}</span>
+            <span class="text-sm text-gray-500 dark:text-gray-400 ml-1">Units (ml)</span>
+        </div>
+    </div>
+    
+    <!-- AB- -->
+    <div class="glass-card rounded-2xl p-5 flex flex-col justify-between border-t-4 border-purple-400 hover:-translate-y-1 transition-transform duration-300 shadow-sm relative overflow-hidden group">
+        <div class="absolute -right-4 -bottom-4 opacity-10 group-hover:opacity-20 transition-opacity">
+            <i class="fas fa-tint text-6xl text-purple-400"></i>
+        </div>
+        <div class="flex items-center justify-between mb-4 z-10">
+            <span class="text-xl font-bold text-gray-800 dark:text-white">AB-</span>
+            <div class="w-8 h-8 rounded-full bg-purple-50 dark:bg-purple-900/20 flex items-center justify-center text-purple-400">
+                <i class="fas fa-tint"></i>
+            </div>
+        </div>
+        <div class="z-10">
+            <span class="text-3xl font-black text-gray-900 dark:text-white">{{AB2.unit}}</span>
+            <span class="text-sm text-gray-500 dark:text-gray-400 ml-1">Units (ml)</span>
+        </div>
+    </div>
+</div>
+
+<!-- Update Form -->
+<div class="glass-card rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden max-w-2xl mx-auto">
+    <div class="p-6 border-b border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/50">
+        <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center">
+            <i class="fas fa-edit mr-2 text-brand-500"></i> Manual Stock Update
+        </h3>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Directly update the available units for a specific blood group.</p>
+    </div>
+    <div class="p-6">
+        <form method="POST" class="flex flex-col sm:flex-row gap-4">
+            {% csrf_token %}
+            <div class="flex-1">
+                <label for="bloodgroup" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Blood Group</label>
+                <select name="bloodgroup" id="bloodgroup" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-500 focus:border-brand-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-brand-500 dark:focus:border-brand-500 transition-colors">
+                    <option disabled="disabled" selected="selected" value="">Select group...</option>
+                    <option value="O+">O+</option>
+                    <option value="O-">O-</option>
+                    <option value="A+">A+</option>
+                    <option value="A-">A-</option>
+                    <option value="B+">B+</option>
+                    <option value="B-">B-</option>
+                    <option value="AB+">AB+</option>
+                    <option value="AB-">AB-</option>
+                </select>
+            </div>
+            <div class="flex-1">
+                <label for="unit" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">New Total Units (ml)</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                        <i class="fas fa-flask text-gray-400"></i>
+                    </div>
+                    <input type="number" id="unit" name="unit" min="0" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-brand-500 focus:border-brand-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-brand-500 dark:focus:border-brand-500 transition-colors" placeholder="e.g. 50">
+                </div>
+            </div>
+            <div class="flex items-end">
+                <button type="submit" class="w-full sm:w-auto text-white bg-brand-600 hover:bg-brand-700 focus:ring-4 focus:outline-none focus:ring-brand-300 font-medium rounded-lg text-sm px-6 py-2.5 text-center dark:bg-brand-600 dark:hover:bg-brand-700 dark:focus:ring-brand-800 transition-colors">
+                    <i class="fas fa-save mr-1"></i> Update
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock content %}

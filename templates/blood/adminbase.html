@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sanguis - Admin Dashboard</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#fdf2f2',
+                            100: '#fbe8e8',
+                            500: '#ef4444', // Red-500
+                            600: '#dc2626',
+                            900: '#7f1d1d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .dark .glass-card {
+            background: rgba(31, 41, 55, 0.7);
+            border: 1px solid rgba(55, 65, 81, 0.3);
+        }
+        /* Scrollbar styles */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 4px; }
+        .dark ::-webkit-scrollbar-thumb { background-color: #4b5563; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300">
+
+    <!-- Navbar -->
+    <nav class="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700 glass-card">
+        <div class="px-3 py-3 lg:px-5 lg:pl-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center justify-start">
+                    <button id="sidebarToggle" type="button" class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                    <a href="/" class="flex ml-2 md:mr-24">
+                        <i class="fas fa-heartbeat text-brand-600 text-3xl mr-3"></i>
+                        <span class="self-center text-xl font-bold sm:text-2xl whitespace-nowrap dark:text-white">Sanguis</span>
+                    </a>
+                </div>
+                <div class="flex items-center">
+                    <div class="flex items-center ml-3 gap-4">
+                        <!-- Dark Mode Toggle -->
+                        <button id="themeToggle" class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg text-sm p-2.5">
+                            <i id="themeToggleIcon" class="fas fa-moon text-lg"></i>
+                        </button>
+                        <!-- Logout -->
+                        <a href="/logout" class="text-white bg-brand-600 hover:bg-brand-700 focus:ring-4 focus:outline-none focus:ring-brand-100 font-medium rounded-lg text-sm px-4 py-2 text-center transition-colors">
+                            <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700" aria-label="Sidebar">
+        <div class="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
+            <ul class="space-y-2 font-medium">
+                <li>
+                    <a href="/admin-dashboard" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-brand-50 hover:text-brand-600 dark:hover:bg-gray-700 group transition-colors">
+                        <i class="fas fa-home w-6 text-gray-500 group-hover:text-brand-600 dark:text-gray-400 dark:group-hover:text-white transition-colors"></i>
+                        <span class="ml-3">Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/admin-donor" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-brand-50 hover:text-brand-600 dark:hover:bg-gray-700 group transition-colors">
+                        <i class="fas fa-user-plus w-6 text-gray-500 group-hover:text-brand-600 dark:text-gray-400 dark:group-hover:text-white transition-colors"></i>
+                        <span class="flex-1 ml-3 whitespace-nowrap">Donors</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/admin-patient" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-brand-50 hover:text-brand-600 dark:hover:bg-gray-700 group transition-colors">
+                        <i class="fas fa-user-injured w-6 text-gray-500 group-hover:text-brand-600 dark:text-gray-400 dark:group-hover:text-white transition-colors"></i>
+                        <span class="flex-1 ml-3 whitespace-nowrap">Patients</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/admin-donation" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-brand-50 hover:text-brand-600 dark:hover:bg-gray-700 group transition-colors">
+                        <i class="fas fa-hand-holding-medical w-6 text-gray-500 group-hover:text-brand-600 dark:text-gray-400 dark:group-hover:text-white transition-colors"></i>
+                        <span class="flex-1 ml-3 whitespace-nowrap">Donations</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/admin-request" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-brand-50 hover:text-brand-600 dark:hover:bg-gray-700 group transition-colors">
+                        <i class="fas fa-procedures w-6 text-gray-500 group-hover:text-brand-600 dark:text-gray-400 dark:group-hover:text-white transition-colors"></i>
+                        <span class="flex-1 ml-3 whitespace-nowrap">Blood Requests</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/admin-blood" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-brand-50 hover:text-brand-600 dark:hover:bg-gray-700 group transition-colors">
+                        <i class="fas fa-tint w-6 text-gray-500 group-hover:text-brand-600 dark:text-gray-400 dark:group-hover:text-white transition-colors"></i>
+                        <span class="flex-1 ml-3 whitespace-nowrap">Blood Stock</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="mt-8 px-4 py-6 bg-brand-50 dark:bg-gray-700 rounded-xl">
+                <p class="text-sm font-semibold text-brand-900 dark:text-white mb-2">Emergency Need</p>
+                <p class="text-xs text-brand-600 dark:text-gray-300 mb-3">O- Negative is currently low.</p>
+                <a href="/admin-blood" class="text-xs font-medium text-white bg-brand-600 px-3 py-1.5 rounded hover:bg-brand-700 transition-colors">Update Stock</a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="p-4 sm:ml-64 mt-14">
+        <main class="min-h-screen">
+            {% block content %}
+            {% endblock content %}
+        </main>
+        
+        <footer class="mt-8 border-t border-gray-200 dark:border-gray-700 pt-6 pb-2 text-center text-sm text-gray-500 dark:text-gray-400">
+            &copy; 2026 Sanguis Blood Management System. Made for Healthcare.
+        </footer>
+    </div>
+
+    <!-- Theme Script -->
+    <script>
+        // Theme toggle logic
+        const themeToggleBtn = document.getElementById('themeToggle');
+        const themeToggleIcon = document.getElementById('themeToggleIcon');
+        const htmlElement = document.documentElement;
+
+        // Check local storage or system preference
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            htmlElement.classList.add('dark');
+            themeToggleIcon.classList.remove('fa-moon');
+            themeToggleIcon.classList.add('fa-sun');
+        } else {
+            htmlElement.classList.remove('dark');
+        }
+
+        themeToggleBtn.addEventListener('click', function() {
+            if (htmlElement.classList.contains('dark')) {
+                htmlElement.classList.remove('dark');
+                localStorage.setItem('color-theme', 'light');
+                themeToggleIcon.classList.remove('fa-sun');
+                themeToggleIcon.classList.add('fa-moon');
+            } else {
+                htmlElement.classList.add('dark');
+                localStorage.setItem('color-theme', 'dark');
+                themeToggleIcon.classList.remove('fa-moon');
+                themeToggleIcon.classList.add('fa-sun');
+            }
+        });
+
+        // Mobile Sidebar Toggle
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebar = document.getElementById('sidebar');
+        sidebarToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('-translate-x-full');
+        });
+    </script>
+</body>
+</html>
