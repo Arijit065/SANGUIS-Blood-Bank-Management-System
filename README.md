@@ -1,80 +1,102 @@
-# Sanguis Blood Management System
-![developer](https://img.shields.io/badge/Developed%20By%20%3A-Sumit%20Kumar-red)
----
-## Screenshots
-### Homepage
-![homepage snap](https://github.com/sumitkumar1503/bloodbankmanagement/blob/master/static/screenshot/homepage.png?raw=true)
-### Admin Dashboard
-![dashboard snap](https://github.com/sumitkumar1503/bloodbankmanagement/blob/master/static/screenshot/admindashboard.png?raw=true)
-### Blood Donation 
-![invoice snap](https://github.com/sumitkumar1503/bloodbankmanagement/blob/master/static/screenshot/blooddonation.png?raw=true)
-### Blood Request
-![doctor snap](https://github.com/sumitkumar1503/bloodbankmanagement/blob/master/static/screenshot/bloodrequest.png?raw=true)
-### Logout
-![doctor snap](https://github.com/sumitkumar1503/bloodbankmanagement/blob/master/static/screenshot/logout.png?raw=true)
----
-## Functions
-    
-### Admin
-- Create Admin account using following command
-```
-py manage.py createsuperuser
-```
-- After Login, can see Unit of blood of each blood group available, Number Of Donor, Number of blood request, Number of approved request, Total Unit of blood on Dashboard.
-- Can View, Update, Delete Donor.
-- Can View, Update, Delete Patient.
-- Can View Donation Request made by donor and can approve or reject that request based on disease of donor.
-- If Donation Request approved by admin then that unit of blood added to blood stock of that blood group.
-- If Donation Request rejected by admin then 0 unit of blood added to stock.
-- Can View Blood Request made by donor / patient and can approve or reject that request.
-- If Blood Request approved by admin then that unit of blood reduced from blood stock of that blood group.
-- If Blood Request rejected by admin then 0 unit of blood reduced from stock.
-- Can see history of blood request.
-- Can Update Unit Of Particular Blood Group.
+# Sanguis Blood Management System 🩸
 
+![developer](https://img.shields.io/badge/Developed%20By%20%3A-Arijit%20Mandal-red)
+![django](https://img.shields.io/badge/Framework-Django-green)
+![tailwindcss](https://img.shields.io/badge/Styling-Tailwind%20CSS-blue)
+![status](https://img.shields.io/badge/Status-Active-success)
 
-### Donor
-- Donor can create account by providing basic details.
-- After Login, Donor can donate blood, After approval from admin only, blood will be added to blood stock.
-- Donor can see their donation history with status (Pending, Approved, Rejected).
-- Donor can also request for blood from blood stock.
-- Donor can see their blood request history with status.
-- Donor can see number of blood request Made, Approved, Pending, Rejected by Admin on their dashboard.
-> **_NOTE:_**  Donor can donate blood and can also request for blood.
-
-
-
-
-
-### Patient
-- Create account (No Approval Required By Admin, Can Login After Signup)
-- After Login, Can see number of blood request Made, Approved, Pending, Rejected by Admin on their dashboard.
-- Patient can request for blood of specific blood group and unit from blood stock.
-- Patient can see their blood request history with status (Pending, Approved, Rejected).
+**Sanguis Blood Management System** is a state-of-the-art, premium 2026 SaaS healthcare application designed to seamlessly bridge the gap between hospitals, blood donors, and patients. Built with a powerful Django backend and a visually stunning, responsive Tailwind CSS frontend interface.
 
 ---
 
-## HOW TO RUN THIS PROJECT
-- Install Python(3.7.6) (Dont Forget to Tick Add to Path while installing Python)
-- Download This Project Zip Folder and Extract it
-- Move to project folder in Terminal. Then run following Commands :
+## ✨ Key Features
 
-```
-python -m pip install -r requirements. txt
+### 🏢 Admin Capabilities
+- **Advanced Dashboard Analytics:** Live Chart.js integration showing blood stock distribution (Pie & Bar charts) and dynamic Donation Growth Trends.
+- **Strict Role-Based Access Control:** Secure backend routing that isolates Admin panels from unauthorized user access.
+- **Inventory Management:** Update, monitor, and manage the exact units available for each blood group (A+, B-, O+, etc.).
+- **User Management:** Full CRUD capabilities for Donors and Patients.
+- **Request Workflows:** Approve or Reject incoming blood requests and donations with automated inventory calculations.
+
+### ❤️ Donor Experience
+- **Premium User Dashboard:** Clean, glassmorphism UI showing dynamic stats (Pending, Approved, Rejected requests).
+- **Gamification & Impact Tracker:** Tracks lifetime donations, unlocks achievements/badges, and calculates loyalty points.
+- **Live Hospital Demand Analytics:** View real-time, network-wide analytics showing exactly which blood groups are currently in the highest demand.
+- **Smart Donation Form:** Integrated pre-donation checklist and modern form UI.
+- **Donation Appointments:** Built-in models to schedule future blood donation slots.
+
+### 🏥 Patient Capabilities
+- **Effortless Onboarding:** Split-screen React-style registration process with beautiful healthcare illustrations.
+- **Emergency Requests:** Request life-saving blood units via an intuitive, icon-rich dashboard form.
+- **Real-Time Tracking:** Track pending blood requests and view a complete request history.
+- **Responsive Navigation:** Smooth mobile drawer navigation and dark/light mode toggle.
+
+---
+
+## 🎨 Technology Stack
+
+- **Backend:** Python, Django
+- **Database:** SQLite (Easily scalable to PostgreSQL)
+- **Frontend Framework:** Vanilla HTML/JS powered entirely by **Tailwind CSS**
+- **Data Visualization:** Chart.js
+- **Icons:** FontAwesome
+- **Styling Details:** Global Dark Mode, Glassmorphism Cards, Smooth CSS Micro-animations
+
+---
+
+## 🚀 How To Run This Project Locally
+
+### 1. Prerequisites
+- Install **Python (3.9+)** (Don't forget to tick "Add to Path" during installation).
+- Install **Git**.
+
+### 2. Clone the Repository
+```bash
+git clone https://github.com/Arijit065/SANGUIS-Blood-Bank-Management-System.git
+cd SANGUIS-Blood-Bank-Management-System
 ```
 
+### 3. Install Dependencies
+```bash
+pip install -r requirements.txt
 ```
-py manage.py makemigrations
-py manage.py migrate
-py manage.py runserver
+*(If `requirements.txt` is missing, ensure you have `django` and `django-widget-tweaks` installed).*
+
+### 4. Database Migrations
+Run the following commands to initialize the database:
+```bash
+python manage.py makemigrations
+python manage.py migrate
 ```
-- Now enter following URL in Your Browser Installed On Your Pc
+
+### 5. Create an Admin Account
+```bash
+python manage.py createsuperuser
+```
+Follow the prompts to set your Admin username, email, and password.
+
+### 6. Start the Server
+```bash
+python manage.py runserver
+```
+
+### 7. Access the Application
+Open your preferred web browser and navigate to:
 ```
 http://127.0.0.1:8000/
 ```
 
+---
 
-## Feedback
-Any suggestion and feedback is welcome. You can message me on facebook
-- [Contact on Facebook](https://fb.com/sumit.luv)
-- [Subscribe my Channel LazyCoder On Youtube](https://youtube.com/lazycoders)
+## 🔒 Access Portals
+
+- **Patient Portal:** `http://127.0.0.1:8000/patient/patientlogin`
+- **Donor Portal:** `http://127.0.0.1:8000/donor/donorlogin`
+- **Admin Portal:** `http://127.0.0.1:8000/adminlogin`
+
+---
+
+## 🤝 Feedback & Contributions
+Any suggestions and feedback are welcome! Feel free to open an Issue or submit a Pull Request.
+
+*Developed with ❤️ by Arijit Mandal.*
